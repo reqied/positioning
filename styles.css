@@ -161,3 +161,45 @@ body {
     clip-path: inset(0 calc(100% - var(--progress)) 0 0);
     transition: clip-path 0.3s ease;
 }
+
+/* Аккордеон */
+.accordion {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.accordion-item {
+    border-bottom: 1px solid #ccc;
+}
+
+/* Скрываем чекбоксы */
+.accordion-item input {
+    display: none;
+}
+
+.accordion-header {
+    display: block;
+    padding: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    transition: background 0.2s;
+}
+
+.accordion-header:hover {
+    background-color: #e0e0e0;
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 15px;
+    background-color: #fafafa;
+}
+
+/* Когда чекбокс отмечен, показываем контент */
+.accordion-item input:checked ~ .accordion-content {
+    max-height: 200px; /* Можно подстроить под размер текста */
+    padding: 15px;
+}
