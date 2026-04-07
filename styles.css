@@ -162,7 +162,6 @@ body {
     transition: clip-path 0.3s ease;
 }
 
-/* Аккордеон */
 .accordion {
     margin-top: 20px;
     width: 100%;
@@ -198,8 +197,7 @@ body {
     background-color: #fafafa;
 }
 
-/* Когда чекбокс отмечен, показываем контент */
 .accordion-item input:checked ~ .accordion-content {
-    max-height: 200px; /* Можно подстроить под размер текста */
+    max-height: 200px;
     padding: 15px;
 }
