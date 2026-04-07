@@ -1,26 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Практика позиционирования</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модальное окно с прогресс-баром</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
         }
 
-        .open-modal-btn {
-            padding: 10px 20px;
+        .open-btn {
+            padding: 12px 24px;
+            font-size: 16px;
             cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
         }
 
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
         }
@@ -34,47 +43,113 @@
         .modal {
             position: relative;
             width: 640px;
-            max-width: 90%;
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 30px 40px 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .modal-close {
+        .close {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
             border: none;
             background: none;
-            cursor: pointer;
+            line-height: 1;
+        }
+        .close:hover { color: #333; }
+
+        .progress-bar {
+            --progress: 40%; 
+            
+            position: relative;
+            width: 100%;
+            height: 40px;
+            background-color: #cccccc; 
+            border-radius: 6px; 
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .progress-fill {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: var(--progress);
+            background-color: red;
+            transition: width 0.3s ease;
+        }
+
+        .text {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            user-select: none;
+            z-index: 2;
+        }
+
+        .text-white {
+            color: white;
+            z-index: 3;
+            clip-path: inset(0 calc(100% - var(--progress)) 0 0);
+            transition: clip-path 0.3s ease;
         }
     </style>
 </head>
 <body>
-    <button class="open-modal-btn" onclick="openModal()">Открыть модальное окно</button>
 
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-        <div class="modal" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <h2>Заголовок</h2>
-            <p>Содержимое модального окна</p>
+    <button class="open-btn" onclick="openModal()">Открыть модальное окно</button>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="close" onclick="closeModal()">&times;</button>
+            <h2 style="margin-top: 0;">Загрузка данных</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+                <div class="text">Loading...</div>
+                <div class="text text-white">Loading...</div>
+            </div>
         </div>
     </div>
 
     <script>
-        const modalOverlay = document.getElementById('modalOverlay');
+        const modal = document.getElementById('modalOverlay');
+        const progressBar = document.querySelector('.progress-bar');
 
         function openModal() {
-            modalOverlay.classList.add('active');
+            modal.classList.add('active');
+            let progress = 0;
+            progressBar.style.setProperty('--progress', '0%');
+            
+            const interval = setInterval(() => {
+                progress += 2;
+                if (progress > 100) {
+                    clearInterval(interval);
+                } else {
+                    progressBar.style.setProperty('--progress', progress + '%');
+                }
+            }, 50);
         }
 
         function closeModal() {
-            modalOverlay.classList.remove('active');
+            modal.classList.remove('active');
         }
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
         });
     </script>
 </body>
